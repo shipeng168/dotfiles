@@ -1,0 +1,8 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+ps -ef|grep -v 'grep'|grep 'xinit'|awk '{print $2}'|xargs -i kill {}
+
+sleep 1
+ps -ef|grep -v 'grep'|grep 'proot'|grep 'vnc.sh'|awk '{print $2}'|xargs -i kill -9 {}
+
+pkill ssh

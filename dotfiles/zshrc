@@ -1,0 +1,56 @@
+
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH="$PATH:$PATH/applets"
+export OMZ=/data/data/com.termux/files/home/.config/omz
+
+source $OMZ/grml.zsh
+
+usr=$PREFIX
+
+HISTSIZE=20480
+SAVEHIST=$HISTSIZE
+HISTFILE=~/.cache/.zsh_history
+
+# User configuration
+# export MANPATH="/usr/local/man:$MANPATH"
+# export LANG=en_US.UTF-8
+export IPYTHONDIR=$HOME/.config/ipython
+export PGDATA=$usr/var/lib/pgsql
+export EDITOR='vim'
+
+source $OMZ/omz.zsh
+
+clear && neofetch
+
+# Set personal aliases, overriding those provided by OMZ
+alias c='clear'
+alias cdc='cd && clear'
+alias grep='grep --color=auto'
+alias apti='apt install'
+alias aptl='apt list 2>/dev/null|grep'
+alias aptr='apt remove'
+alias apts='apt show'
+alias clear_scroll='printf "\033c"'
+alias installed="dpkg -l|grep '^ii'|awk '{print \$2}'"
+alias installedeb="dpkg -l|grep '^ii'|awk '{print \$2}'|grep -v '^lib'"
+alias da='du -csh'
+alias dad='da *|grep M|sort -n'
+alias dL='dpkg -L'
+alias dS='dpkg -S'
+alias dP="dpkg -l|grep -v '^ii'"
+alias enableAPK="adb shell pm enable --user 0"
+alias disableAPK="adb shell pm disable-user --user 0"
+alias f='file -b'
+alias g='gdb -q'
+alias pv='pv -qL'
+alias wcl='wc -l'
+alias matrix='cmatrix -b -u 6'
+alias rootsql='mysql -u root 2>/dev/null'
+alias ss4='netstat -ant'
+alias ftp='tcpsvd -E 0.0.0.0 8021 ftpd'
+alias bx='busybox'
+alias viS='vim -S Session.vim'
+alias batemp="adb shell dumpsys battery|grep temperature"
+#alias ipy='ipython --no-term-title --no-confirm-exit --no-banner'
+#~/scripts/shell/ad_clear.sh

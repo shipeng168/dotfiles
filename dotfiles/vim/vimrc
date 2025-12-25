@@ -1,0 +1,164 @@
+set nocompatible
+filetype off
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'morhetz/gruvbox'
+Plug 'itchyny/lightline.vim'   " 
+let g:lightline = {
+	\ 'colorscheme': 'one',
+	\ 'separator': {'left':'','right':''},
+	\ 'subseparator': {'left':'','right':''}}
+let g:lightline.component = {
+	\ 'percent': '%p%%',
+	\ 'filetype': '%{&ft!=#""?&ft:"nul"}',
+	\ 'lineinfo': '%l,%v'}
+Plug 'jiangmiao/auto-pairs'
+"Plug 'psliwka/vim-smoothie'
+Plug 'mhinz/vim-startify'
+let g:startify_padding_left=2
+let g:startify_custom_header=[]
+"Plug 'maralla/completor.vim'
+"inoremap <expr><TAB> pumvisible()?"\<C-n>":"\<TAB>"
+"inoremap <expr><cr> pumvisible()?"\<C-y>":"\<cr>"
+"inoremap <expr><cr> pumvisible()?"\<C-n>\<C-y>":"\<cr>"
+"Plug 'sphamba/smear-cursor.nvim'
+"lua require('smear_cursor').enabled = true
+Plug 'neoclide/coc.nvim'
+inoremap <silent><expr> <TAB>
+  \ coc#pum#visible() ? coc#pum#next(1) :
+  \ CheckBackspace() ? "\<Tab>" :
+  \ coc#refresh()
+function! CheckBackspace() abort
+let col = col('.') - 1
+return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+call plug#end()
+
+"let g:skip_defaults_vim = 1
+
+" close brackets
+":inoremap ( ()<Esc>i
+":inoremap < <><Esc>i
+":inoremap { {}<Esc>i
+":inoremap [ []<Esc>i
+":inoremap " ""<Esc>i
+":inoremap ' ''<Esc>i
+":inoremap ` ``<Esc>i
+
+"imap ( ()
+"imap [ []
+"imap { {}
+"imap < <>
+
+filetype plugin indent on
+syntax on
+
+colorscheme gruvbox
+"highlight Normal ctermbg=NONE
+"autocmd ColorScheme * highlight Normal ctermbg=NONE
+
+set foldmethod=syntax
+set nofoldenable
+set magic
+set background=dark
+set number
+set relativenumber
+set cursorline
+set cursorcolumn
+set laststatus=2
+set expandtab
+set ruler
+set wildmenu
+set nobackup
+set nowritebackup
+set noswapfile
+set noshowmode
+set autoindent
+set autoread
+set autowrite		" Automatically save before commands like:next and :make
+set showcmd		    " Show (partial) command in status line.
+set showmatch		" Show matching brackets.
+set ignorecase		" Do case insensitive matching
+set incsearch		" Incremental search
+set hlsearch		" Highlight search
+set hidden		    " Hide buffers when they are abandoned
+set mouse=a		    " Enable mouse usage (all modes)
+set smartcase		" Do smart case matching
+"set smartindent
+"set smarttab
+set ts=4
+set sw=4            " shiftwidth
+set sts=4
+set shiftwidth=4
+set encoding=utf-8
+"set cindent
+"set completeopt-=preview
+"set clipboard=unnamedplus
+set display=truncate
+set foldenable
+set foldmethod=indent  " manual syntax
+set foldcolumn=0
+set foldlevel=99
+"set list    " invisible char list
+"set tw=80   " textwidth
+set scrolloff=5
+set ttyfast
+"set wrap
+set nowrap
+set wrapscan
+set binary
+set noeol
+
+set viminfo+=n~/.vim/.viminfo
+set statusline=%t%m%r%h%w%=
+set statusline+=[%{&ft!=#\"\"?&ft:\"nul\"}]
+set statusline+=[%{&fenc!=#\"\"?&fenc:&enc}]
+set statusline+=[%{&ff}][%l,%v][%p%%]
+
+
+highlight Whitespace ctermbg=red
+match Whitespace /\s\+$\|+\ze\t/
+nnoremap <silent><C-s> :%s/\s\+$//g<cr>
+
+vnoremap <C-y> "+y
+
+command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+
+nmap <silent><Leader>h :vertical resize -2<cr>
+nmap <silent><Leader>l :vertical resize +2<cr>
+
+nnoremap <space> za
+nnoremap <silent><TAB> :tabnext<cr>
+nnoremap wr :set wrap<cr>
+nnoremap nwr :set nowrap<cr>
+nnoremap ww :w!<cr>
+nnoremap wa :wa!<cr>
+nnoremap wq :wq!<cr>
+nnoremap qq :q!<cr>
+nnoremap qa :qa!<cr>
+
+"au BufEnter * silent! checktime
+au CursorHold * silent! checktime
+au CursorHoldI * silent! checktime
+au CursorMoved * silent! checktime
+au CursorMovedI * silent! checktime
+
+nnoremap r :w<cr>:!clear && ./%<cr>
+inoremap r <esc>:w<cr>:!clear && ./%<cr>
+au filetype python map <F5> :w<cr>:!clear && python3 %<cr>
+au filetype python imap <F5> <esc>:w<cr>:!clear && python3 %<cr>
+
+augroup vimStartup
+  au!
+  autocmd BufReadPost *
+    \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+    \ |   exe "normal! g`\""
+    \ | endif
+augroup END

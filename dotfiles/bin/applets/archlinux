@@ -1,0 +1,77 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+unset LD_PRELOAD
+umask 0022
+
+PROOT="exec proot -L --sysvipc --link2symlink -0 -r $HOME/arch -b /dev/ -b /proc/ -b /sys/ -b /proc/self/fd/2:/dev/stderr -b /proc/self/fd/1:/dev/stdout -b /proc/self/fd/0:/dev/stdin -b /proc/self/fd:/dev/fd -b /dev/urandom:/dev/random"
+
+if [ "$1" == "stop" ];then
+    #ps -ef|grep -v 'grep'|grep 'xinit'|awk '{print $2}'|xargs -i kill {}
+
+    #sleep 1
+    #ps -ef|grep -v 'grep'|grep 'proot'|grep 'vnc.sh'|awk '{print $2}'|xargs -i kill -9 {}
+
+    #pkill ssh
+    #pkill dbus
+    ps -ef|grep -v 'grep'|grep 'proot'|awk '{print $2}'|xargs -i kill -9 {}
+    #ps -ef|grep -vE 'grep|proot'|grep 'vnc.sh'|awk '{print $2}'|xargs -i kill {}
+    exit
+fi
+
+
+if [ "$1" == "vnc" ];then
+    $PROOT --kill-on-exit -w /root \
+          /usr/bin/env -i \
+          USER=root \
+          HOME=/root \
+          SHELL=/bin/zsh \
+          PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+          TERM=xterm-256color \
+          /bin/bash /root/.vnc/vnc.sh &
+    disown
+    exit
+fi
+
+
+if [ "$1" == "nginx" ];then
+	shift
+    $PROOT -w /usr/local/nginx \
+	/usr/bin/env -i \
+	/usr/local/nginx/sbin/nginx "$@" &
+	disown
+    exit
+fi
+
+if [ "$1" == "prometheus" ];then
+    $PROOT -w /var/lib/prometheus \
+    /usr/bin/env -i \
+    LISTEN_ADDRESS=127.0.0.1:9113 \
+    /usr/bin/nginx-prometheus-exporter &>/dev/null &
+    disown
+
+    $PROOT -w /var/lib/prometheus \
+    /usr/bin/env -i \
+    /usr/bin/prometheus-node-exporter \
+    --web.listen-address=127.0.0.1:9100 &>/dev/null &
+    disown
+
+    $PROOT -w /usr/share/prometheus \
+    /usr/bin/env -i \
+    /usr/bin/prometheus \
+    --web.listen-address=127.0.0.1:9090 \
+    --config.file=/etc/prometheus/prometheus.yml \
+    --storage.tsdb.path=/var/lib/prometheus/data &>/dev/null &
+    disown
+    exit
+fi
+
+$PROOT --kill-on-exit -w /root \
+/usr/bin/env -i \
+USER=root \
+HOME=/root \
+SHELL=/bin/zsh \
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games \
+COLORTERM=truecolor \
+TERM=xterm-256color \
+/bin/zsh "$@"
+

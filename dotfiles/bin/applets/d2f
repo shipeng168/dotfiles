@@ -1,0 +1,16 @@
+#!/bin/bash
+
+d2f () {   # directory to file
+    if [ -d $1 ]
+    then
+        rm "$1" -r
+        touch $1
+    fi
+}
+
+if [ "$#" -eq "0" ]
+then
+    echo "usage: d2f dirname"
+else
+    d2f "$@"
+fi

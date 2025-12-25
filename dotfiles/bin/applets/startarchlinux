@@ -1,0 +1,5 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+unset LD_PRELOAD
+proot --link2symlink -0 -r ~/arch -b /dev/ -b /proc/ -b /sys/ -w /root /usr/bin/env -i USER=root HOME=/root SHELL=/bin/zsh PATH=/bin:/usr/bin:/sbin:/usr/sbin TERM=xterm-256color /root/.vnc/vnc.sh &
+disown

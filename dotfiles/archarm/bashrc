@@ -1,0 +1,45 @@
+clear
+#figlet "Shawn"
+#toilet --gay Shawn
+#screenfetch
+neofetch -L
+#PS1='\e[31;1mshawn@GiONEE:\e[0m(ง•̀_•́)ง\e[36;1m\w\e[0mԅ(°ω°ԅ)\n\#\$ '
+PS1="\e[31;1m\u@arch\e[0m:\e[34;1m\w\e[0m\n\#\$ "
+
+alias ..='cd ..'
+alias ...='cd ../../'
+alias da='du -csh'
+alias dad='da *|grep -v K|grep -v ^0|sort -n'
+alias f='file -b'
+alias ls='ls --color=auto'
+alias l='ls -ACF'
+alias l.='ls -dlh .*'
+alias ll='ls -lth'
+alias la='ls -ASlh'
+alias lf='ls -Alh|grep ^\-'
+alias lsd='ls -Alh|grep ^d'
+alias grep='grep --color=auto'
+alias pv='pv -qL'
+alias md='mkdir -p'
+alias rd='rmdir'
+alias matrix='cmatrix -b -u 6'
+alias ss4='ss -ant4'
+alias bx='busybox'
+
+#usr=$PREFIX
+#HISTTIMEFORMAT="%Y-%m-%d/%H:%M:%S "
+#PATH="$PATH:/system/bin"
+#export TZ="CST-8"
+#export IPYTHONDIR=$HOME/.config/ipython
+
+title() { echo -en "\033]0;$*\007";}
+
+cl() {
+	if [[ $1 == "" ]]
+	then
+		cd ~ && ll
+	else
+		cd "$1" && ll
+	fi
+}
+del() { mv "$@" ~/Trash >/dev/null 2>&1;}

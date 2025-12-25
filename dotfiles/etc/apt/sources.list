@@ -1,0 +1,5 @@
+# The main termux repository:
+#deb [arch=all,aarch64] https://termux.net stable main
+#deb [arch=all,aarch64] https://mirrors.tuna.tsinghua.edu.cn/termux stable main
+deb [arch=all,aarch64] http://mirrors.ustc.edu.cn/termux stable main
+#deb [arch=all,aarch64] http://202.141.176.110/termux stable main

@@ -1,0 +1,10 @@
+{
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportUnusedVariable": false,
+        "reportUnusedCoroutine": false,
+        "reportGeneralTypeIssues":"none"
+    },
+    "pyright.inlayHints.variableTypes": false,
+    "pyright.inlayHints.parameterTypes": false,
+    "pyright.inlayHints.functionReturnTypes": false
+}

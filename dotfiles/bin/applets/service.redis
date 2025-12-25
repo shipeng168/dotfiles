@@ -1,0 +1,40 @@
+#!/bin/bash
+set -e
+
+# Redis Start/Stop Script
+# Redis daemon yes
+
+perfix=/data/data/com.termux/files/usr
+rs=$perfix/bin/redis-server
+rs_conf=$perfix/etc/redis.conf
+rs_pid=$perfix/var/run/redis.pid
+
+case "$1" in
+    start)
+        if [[ -e $rs_pid ]]; then
+            echo "Redis is started"
+        else
+            $rs $rs_conf
+            echo "Start redis success"
+        fi
+    ;;
+    stop)
+        if [[ -e $rs_pid ]]; then
+            kill $(cat $rs_pid)
+            echo "Shutdown redis success"
+        else
+            echo "Redis is not start"
+        fi
+    ;;
+    restart)
+        $0 stop
+        sleep 1
+        $0 start
+    ;;
+    edit)
+        vi $rs_conf
+    ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+    ;;
+esac

@@ -1,0 +1,4 @@
+foreground-scripts=true
+cache=~/.cache/npm
+registry=https://registry.npmmirror.com/
+coc.nvim:registry=https://registry.npmmirror.com/

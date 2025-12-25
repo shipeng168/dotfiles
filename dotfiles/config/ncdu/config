@@ -1,0 +1,9 @@
+# off dark dark-bg
+--color dark
+
+# hash half-block eighth-block
+#--graph-style half-block
+
+--group-directories-first
+
+--confirm-quit

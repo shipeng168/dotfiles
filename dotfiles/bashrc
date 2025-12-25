@@ -1,0 +1,51 @@
+#clear
+#figlet "Shawn"
+#toilet --gay Shawn
+#screenfetch
+#neofetch
+#PS1='\e[31;1mshawn@GiONEE:\e[0m(ง•̀_•́)ง\e[36;1m\w\e[0mԅ(°ω°ԅ)\n\#\$ '
+PS1="\e[31;1m[\u@GiONEE\e[34;1m\w\e[31;1m]\e[0m\n\#\$ "
+
+alias ..='cd ..'
+alias ...='cd ../../'
+alias apti='apt install'
+alias aptl='apt list|grep'
+alias apts='apt show'
+alias installed="dpkg -l|grep ^ii|awk '{print \$2}'"
+alias da='du -csh'
+alias dad='da *|grep -v K|grep -v ^0|sort -n'
+alias dL='dpkg -L'
+alias f='file -b'
+alias l='ls -ACF'
+alias l.='ls -dlh .*'
+alias ll='ls -lth'
+alias la='ls -ASlh'
+alias lf='ls -Alh|grep ^\-'
+alias lsd='ls -Alh|grep ^d'
+alias grep='grep --color=auto'
+alias pv='pv -qL'
+alias md='mkdir -p'
+alias rd='rmdir'
+alias matrix='cmatrix -b -u 6'
+alias ss='netstat -ant'
+#alias ftp='tcpsvd -E 0.0.0.0 8021 ftpd /data/data/com.termux/files/home'
+alias ftp='tcpsvd -E 0.0.0.0 8021 ftpd'
+alias bx='busybox'
+
+usr=$PREFIX
+#HISTTIMEFORMAT="%Y-%m-%d/%H:%M:%S "
+#PATH="$PATH:/system/bin"
+#export TZ="CST-8"
+export IPYTHONDIR=$HOME/.config/ipython
+
+title() { echo -en "\033]0;$*\007";}
+
+cl() {
+	if [[ $1 == "" ]]
+	then
+		cd ~ && ll
+	else
+		cd "$1" && ll
+	fi
+}
+del() { mv "$@" ~/Trash >/dev/null 2>&1;}

@@ -1,0 +1,125 @@
+#!/bin/bash
+set -e
+
+# MariaDB Start/Stop Script
+# MariaDB daemon yes
+
+perfix='/data/data/com.termux/files/usr'
+bindir=$perfix/bin
+mdb=$perfix/bin/mariadbd-safe
+mdb_conf=$perfix/etc/my.cnf
+mdb_dir=$perfix/var/lib/mysql
+mdb_pid=$mdb_dir/`hostname`.pid
+
+service_startup_timeout=10
+case `echo "testing\c"`,`echo -n testing` in
+    *c*,-n*) echo_n=-n echo_c=     ;;
+    *c*,*)   echo_n=-n echo_c=     ;;
+    *)       echo_n=-n echo_c='\c' ;;
+esac
+log_success_msg()
+{
+echo " SUCCESS! $@"
+}
+log_failure_msg()
+{
+echo " ERROR! $@"
+}
+
+wait_for_gone () {
+  pid=$(cat $mdb_pid)
+  pid_file_path=$mdb_pid
+
+  i=0
+  crash_protection="by checking again"
+
+  while test $i -ne $service_startup_timeout ; do
+
+    if kill -0 "$pid" 2>/dev/null; then
+      :  # the server still runs
+    else
+      if test ! -s "$pid_file_path"; then
+        # no server process and no pid-file? great, we're done!
+        log_success_msg
+        return 0
+      fi
+
+      # pid-file exists, the server process doesn't.
+      # it must've crashed, and mysqld_safe will restart it
+      if test -n "$crash_protection"; then
+        crash_protection=""
+        sleep 5
+        continue  # Check again.
+      fi
+
+      # Cannot help it
+      log_failure_msg "The server quit without updating PID file ($pid_file_path)."
+      return 1  # not waiting any more.
+    fi
+
+    echo $echo_n "...$echo_c"
+    i=`expr $i + 1`
+    sleep 1
+
+  done
+
+  log_failure_msg
+  return 1
+}
+
+wait_for_ready () {
+
+  i=0
+  while test $i -ne $service_startup_timeout ; do
+
+    if $bindir/mariadb-admin ping >/dev/null 2>&1; then
+      log_success_msg
+      return 0
+    elif kill -0 $! 2>/dev/null ; then
+      :  # mysqld_safe is still running
+    else
+      # mysqld_safe is no longer running, abort the wait loop
+      break
+    fi
+
+    echo $echo_n ".$echo_c"
+    i=`expr $i + 1`
+    sleep 1
+
+  done
+
+  log_failure_msg
+  return 1
+}
+
+case "$1" in
+    start)
+        if [[ -e $mdb_pid ]]; then
+            echo "MariaDB is started"
+        else
+            $mdb --basedir="$perfix" --datadir="$mdb_dir" --pid-file="$mdb_pid" &>/dev/null &
+            echo $echo_n "Start MariaDB "
+            wait_for_ready
+        fi
+    ;;
+    stop)
+        if [[ -e $mdb_pid ]]; then
+            echo $echo_n "Shutting down MariaDB "
+            kill $(cat $mdb_pid)
+            wait_for_gone
+        else
+            echo "MariaDB is not running"
+        fi
+    ;;
+    restart)
+        $0 stop
+        sleep 1
+        $0 start
+    ;;
+    edit)
+        vi $mdb_conf
+    ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+    ;;
+esac
