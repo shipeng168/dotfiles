@@ -1,10 +1,5 @@
-#clear
-#figlet "Shawn"
-#toilet --gay Shawn
-#screenfetch
-#neofetch
-#PS1='\e[31;1mshawn@GiONEE:\e[0m(ง•̀_•́)ง\e[36;1m\w\e[0mԅ(°ω°ԅ)\n\#\$ '
-PS1="\e[31;1m[\u@GiONEE\e[34;1m\w\e[31;1m]\e[0m\n\#\$ "
+
+PS1="\e[31;1m[\u@\h\e[34;1m\w\e[31;1m]\e[0m\n\#\$ "
 
 alias ..='cd ..'
 alias ...='cd ../../'
